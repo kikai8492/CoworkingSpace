@@ -1,0 +1,9 @@
+<h2><%= current_user.name%>さんの予約履歴一覧</h2>
+
+<% @reservation.each do |reservation|%>
+  <p>予約日：<%= reservation.reservation_date.strftime('%Y/%m/%d') %></p>
+  <% if reservation.reservation_date >= Date.today %>
+    <p><%= link_to "編集する", edit_reservation_path(reservation) %></p>
+    <p><%= link_to "削除する", reservation_path(reservation), method: :delete %></p>
+  <% end %>
+<% end %>

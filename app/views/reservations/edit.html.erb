@@ -1,0 +1,6 @@
+<h2>予約変更ページ<h2>
+<%= form_with model: @reservation do |f|%>
+  <%= f.label :"予約日" %>
+  <%= f.date_field :reservation_date %>
+  <%= f.submit "予約を変更する" %>
+<% end %>

@@ -1,11 +1,18 @@
 <h1> コワーキングスペース予約サイト </h1>
 
+<%= link_to "ログアウトする", destroy_user_session_path, method: :delete%>
+
+<%= link_to "編集する", edit_user_registration_path(current_user)%>
+
 <%= link_to '予約する', new_reservation_path %>
 
-<% if @reservations.present?%>
-  <%= @reservations.each do |reservation|%>
-    <p>予約日：<%= reservation.date %></p>
-  <% end%>
+<% if @reservations.length === 0%>
+  <h2>予約はありません</h2>
 <% else %>
-  <h2>まだ予約はありません</h2>
-<% end %>
+  <% @reservations.each do |reservation|%>
+    <p>予約日：<%= reservation.reservation_date.strftime('%Y/%m/%d') %></p> 
+    <p><%= link_to "編集する", edit_reservation_path(reservation) %></p>
+  <p><%= link_to "削除する", reservation_path(reservation), method: :delete, data: { confirm: '本当に予約を取り消しますか？' } %></p>
+  <% end%>
+<% end%>
+

@@ -1,28 +1,34 @@
 class ReservationsController < ApplicationController
   def index 
-    reservations = Reservation.all
-    @reservations = current_user.reservations.where(reservation_date: reservation_date >= Date.today)
+    if user_signed_in?
+      @reservations = current_user.reservations.where("reservation_date >= ?", Date.today)
+    else
+      redirect_to new_user_session_path, notice: "ログインしてください"
+    end
   end
 
-  def def new
+  def new
     @reservation = Reservation.new
   end
 
   def create
     @reservation = current_user.reservations.build(reservation_params)
     if @reservation.save
-      redirect_to reservetions_path, notice: "予約が完了しました"
+      redirect_to reservations_path, notice: "予約が完了しました"
     else
       render :new, notice: "予約に失敗しました"
     end
   end
 
   def show
+    if @reservation.user_id != current_user.id
+      redirect_to reservations_path, notice: "他人の予約は見れません"
+    end
     @reservation = current_user.reservations.all
   end
 
   def edit 
-    @reservation = Reservations.find(params[:id])
+    @reservation = Reservation.find(params[:id])
     if @reservation.user_id != current_user.id
       redirect_to reservations_path, notice: "他人の予約は編集できません"
     end
@@ -35,7 +41,7 @@ class ReservationsController < ApplicationController
 
   def update
     @reservation = Reservation.find(params[:id])
-    if @reservation.update
+    if @reservation.update(reservation_params)
       redirect_to reservations_path, notice: "予約を更新しました"
     else
       render :edit, notice: "予約の更新に失敗しました"
