@@ -1,7 +1,7 @@
 class ReservationsController < ApplicationController
   def index 
     if user_signed_in?
-      @reservations = current_user.reservations.where("reservation_date >= ?", Date.today)
+      @reservations = current_user.reservations.where("reservation_date >= ?", Date.today).order(reservation_date: "ASC")
     else
       redirect_to new_user_session_path, notice: "ログインしてください"
     end
@@ -13,6 +13,9 @@ class ReservationsController < ApplicationController
 
   def create
     @reservation = current_user.reservations.build(reservation_params)
+    if @reservation.reservation_date < Date.today
+      render :new, notice: "過去の日付は予約できません"
+    end
     if @reservation.save
       redirect_to reservations_path, notice: "予約が完了しました"
     else
@@ -29,6 +32,9 @@ class ReservationsController < ApplicationController
 
   def edit 
     @reservation = Reservation.find(params[:id])
+    if @reservation.reservation_date < Date.today
+      render :edit, notice: "過去の日付は予約できません"
+    end
     if @reservation.user_id != current_user.id
       redirect_to reservations_path, notice: "他人の予約は編集できません"
     end

@@ -2,13 +2,19 @@
 
 <%= link_to "ログアウトする", destroy_user_session_path, method: :delete%>
 
-<%= link_to "編集する", edit_user_registration_path(current_user)%>
+<%= link_to "ユーザ情報を編集する", edit_user_registration_path(current_user)%>
 
 <%= link_to '予約する', new_reservation_path %>
 
+<% if current_user.try(:admin?) %>
+    <%= link_to '管理者ログイン', rails_admin_path %>
+  <% end %>
+
+<h3><%= current_user.name%>でログイン中</h3>
 <% if @reservations.length === 0%>
   <h2>予約はありません</h2>
 <% else %>
+  <h3><%= current_user.name%>さんの予約日は以下の通りです</h3>
   <% @reservations.each do |reservation|%>
     <p>予約日：<%= reservation.reservation_date.strftime('%Y/%m/%d') %></p> 
     <p><%= link_to "編集する", edit_reservation_path(reservation) %></p>
