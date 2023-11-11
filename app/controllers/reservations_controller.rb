@@ -1,5 +1,6 @@
 class ReservationsController < ApplicationController
   def index 
+    reservations = Reservation.all
     @reservations = current_user.reservations.where(reservation_date: reservation_date >= Date.today)
   end
 
