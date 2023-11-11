@@ -1,0 +1,11 @@
+<h1> コワーキングスペース予約サイト </h1>
+
+<%= link_to '予約する', new_reservation_path %>
+
+<% if @reservations.present?%>
+  <%= @reservations.each do |reservation|%>
+    <p>予約日：<%= reservation.date %></p>
+  <% end%>
+<% else %>
+  <h2>まだ予約はありません</h2>
+<% end %>
